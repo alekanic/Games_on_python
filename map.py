@@ -91,11 +91,15 @@ class Map:
 
     # функция будет удалять огни, когда те уже сгорели
     # а так же добавлять новые
-    def update_fires(self):
+    def update_fires(self, helico):
         for ri in range(self.h):
             for ci in range(self.w):
                 cell = self.cells[ri][ci]
                 if cell == 5:
+                    if helico.score - THREE_BONUS >= 0:
+                        helico.score -= THREE_BONUS
+                    else:
+                        helico.score = 0
                     self.cells[ri][ci] = 0 # удаляем старый пожар
         for i in range(10):
             self.add_fire() # начинаем новый пожар

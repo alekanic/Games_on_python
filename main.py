@@ -10,8 +10,8 @@ import json
 # объявляем константы
 TICK_SLEEP = 0.05
 TREE_UPDATE = 50
-FIRE_UPDATE = 40
-CLOUDS_UPDATE = 100
+FIRE_UPDATE = 100
+CLOUDS_UPDATE = 200
 MAP_W, MAP_H = 20, 10
 tick = 1
 
@@ -31,7 +31,7 @@ def process_key(key):
         dy = MOVES[c][1]
         helico.move(dx, dy)
     # сохранение игры
-    elif c == 'f':
+    if c == 'f':
         data = {"helicopter": helico.export_data(),
                 "clouds": clouds.export_data(),
                 "field": field.export_data(),
@@ -39,16 +39,13 @@ def process_key(key):
         with open("level.json", "w") as lvl:
             json.dump(data, lvl)
     # загрузка игры
-    elif c == 'g':
+    if c == 'g':
         with open("level.json", "r") as lvl:
             data = json.load(lvl)
             helico.import_data(data["helicopter"])
             tick = data["tick"] or 1
             field.import_data(data["field"])
             clouds.import_data(data["clouds"])
-
-
-
 
 listener = keyboard.Listener(
     on_press=None,
@@ -66,6 +63,6 @@ while True:
     if (tick % TREE_UPDATE == 0):
         field.generate_tree()
     if (tick % FIRE_UPDATE == 0):
-        field.update_fires()
+        field.update_fires(helico)
     if (tick % CLOUDS_UPDATE == 0):
         clouds.update_clouds()
